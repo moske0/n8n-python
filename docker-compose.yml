@@ -1,12 +1,12 @@
 services:
   n8n:
-    image: build
+    build: .
     environment:
       - SERVICE_FQDN_N8N_5678
       - 'N8N_EDITOR_BASE_URL=${SERVICE_FQDN_N8N}'
       - 'WEBHOOK_URL=${SERVICE_FQDN_N8N}'
       - 'N8N_HOST=${SERVICE_URL_N8N}'
-      - 'GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-Europe/Berlin}'
+      - 'GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-Europe/Madrid}'
       - 'TZ=${TZ:-Europe/Madrid}'
       - DB_TYPE=postgresdb
       - 'DB_POSTGRESDB_DATABASE=${POSTGRES_DB:-n8n}'
