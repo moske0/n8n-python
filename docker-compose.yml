@@ -1,7 +1,7 @@
 services:
   n8n:
     image: docker.n8n.io/n8nio/n8n:latest
-    command: tail -f /dev/null
+    command: sh -c "while true; do sleep 1; done"
     environment:
       - SERVICE_FQDN_N8N_5678
       - 'N8N_EDITOR_BASE_URL=${SERVICE_FQDN_N8N}'
