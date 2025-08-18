@@ -1,7 +1,10 @@
 services:
   n8n:
     image: docker.n8n.io/n8nio/n8n:latest
-    command: sh -c "while true; do sleep 1; done"
+    # AÑADIMOS ESTA LÍNEA PARA ANULAR EL SCRIPT DE INICIO     
+    entrypoint: ""
+    # CAMBIAMOS EL FORMATO DEL COMANDO PARA MÁXIMA COMPATIBILIDAD
+    command: ["/bin/sh", "-c", "while true; do sleep 1; done"]
     environment:
       - SERVICE_FQDN_N8N_5678
       - 'N8N_EDITOR_BASE_URL=${SERVICE_FQDN_N8N}'
