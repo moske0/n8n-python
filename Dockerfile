@@ -19,9 +19,6 @@ USER node
 # 3. Instalar pipx como una herramienta solo para el usuario 'node'
 RUN python3 -m pip install --user --break-system-packages pipx
 
-# 4. Copiar tu script de cliente (opcional, ver nota abajo)
-COPY zep_client.py /home/node/zep_client.py
-
-# 5. Añadir el directorio local de binarios de 'node' AL FINAL del PATH
+# 4. Añadir el directorio local de binarios de 'node' AL FINAL del PATH
 #    Esto es más seguro que ponerlo al principio
 ENV PATH="$PATH:/home/node/.local/bin"
