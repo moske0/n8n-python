@@ -8,4 +8,4 @@ USER node
 RUN python3 -m pip install --user --break-system-packages pipx
  
 # Add the path of the pipx installation to PATH
-ENV PATH="$PATH:/home/node/.local/bin"
+ENV PATH="/home/node/.local/bin:$PATH"
