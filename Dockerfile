@@ -10,11 +10,11 @@ RUN apk add --no-cache python3 py3-pip
 
 # 4. Instala zep-cloud globalmente (no hace falta venv en Alpine para scripts de integración)
 
-RUN pip3 install --upgrade pip &amp;&amp; pip3 install zep-cloud
+RUN pip3 install --upgrade pip && pip3 install zep-cloud
 
 # 5. Crea el directorio /app/scripts donde vivirán nuestros scripts
 
-RUN mkdir -p /app/scripts &amp;&amp; chown -R node:node /app
+RUN mkdir -p /app/scripts && chown -R node:node /app
 
 # 6. Copia los nuevos scripts de Python a la imagen
 
