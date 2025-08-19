@@ -21,8 +21,9 @@ USER node
 # 4. Instalar herramientas de usuario como pipx
 RUN python3 -m pip install --user --break-system-packages pipx
 
-# 5. Copiar nuestro fichero de ayuda al nuevo directorio
+# 5. Copiar nuestros ficheros de Python al nuevo directorio
 COPY --chown=node:node zep_helpers.py /app/helpers/zep_helpers.py
+COPY --chown=node:node test_import.py /app/helpers/test_import.py
 
 # 6. Añadir el nuevo directorio a la ruta de búsqueda de Python (PYTHONPATH)
 ENV PYTHONPATH="/app/helpers:${PYTHONPATH}"
