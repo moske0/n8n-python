@@ -2,27 +2,28 @@
 FROM docker.n8n.io/n8nio/n8n:latest
 
 # --- TAREAS COMO USUARIO ROOT ---
-# Cambiamos a root para poder instalar paquetes del sistema
 USER root
 
-# 1. Instalar python y pip usando el gestor de paquetes de Alpine
+# 1. Instalar dependencias del sistema
 RUN apk add --update python3 py3-pip
 
-# 2. Instalar el SDK de Zep para que esté disponible para todos los usuarios
+# 2. Instalar librerías de Python globalmente
 RUN python3 -m pip install --no-cache-dir --break-system-packages zep-cloud
 
+# 3. Crear un nuevo directorio para nuestros helpers personalizados
+RUN mkdir -p /app/helpers && chown -R node:node /app
 
 # --- TAREAS COMO USUARIO NODE ---
-# Volvemos al usuario 'node', que es con el que se ejecuta n8n
 USER node
 
-# 3. Instalar pipx como una herramienta solo para el usuario 'node'
+# 4. Instalar herramientas de usuario como pipx
 RUN python3 -m pip install --user --break-system-packages pipx
 
-# 4. Copiar el fichero de ayuda al directorio de n8n
-#    n8n añade automáticamente /home/node/.n8n a la ruta de Python, 
-#    por lo que podremos importarlo directamente.
-COPY --chown=node:node zep_helpers.py /home/node/.n8n/zep_helpers.py
+# 5. Copiar nuestro fichero de ayuda al nuevo directorio, no al que se solapa con el volumen
+COPY --chown=node:node zep_helpers.py /app/helpers/zep_helpers.py
 
-# 5. Añadir el directorio local de binarios de 'node' AL FINAL del PATH
+# 6. Añadir el nuevo directorio a la ruta de búsqueda de Python (PYTHONPATH)
+ENV PYTHONPATH="/app/helpers:${PYTHONPATH}"
+
+# 7. Añadir el directorio local de binarios de 'node' AL FINAL del PATH principal
 ENV PATH="$PATH:/home/node/.local/bin"
