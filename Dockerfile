@@ -1,28 +1,28 @@
-# Empezamos con la imagen oficial de n8n
+# 1. Imagen oficial de n8n
 FROM docker.n8n.io/n8nio/n8n:latest
 
-# 2. Cambiamos a usuario root para instalar paquetes del sistema
-
+# 2. Usuario root para instalar paquetes
 USER root
 
-# 3. Instala Python 3 y pip en Alpine (sin venv, no es necesario para tu caso)
-RUN apk add --no-cache python3 py3-pip
+# 3. Instala Python 3, pip y virtualenv en Alpine
+RUN apk add --no-cache python3 py3-pip py3-virtualenv
 
-# 4. Instala zep-cloud globalmente (no hace falta venv en Alpine para scripts de integración)
+# 4. Crea entorno virtual en /opt/venv e instala zep-cloud dentro
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --upgrade pip && \
+    /opt/venv/bin/pip install zep-cloud
 
-RUN pip3 install --upgrade pip && pip3 install zep-cloud
+# 5. Añade el entorno virtual al PATH
+ENV PATH="/opt/venv/bin:${PATH}"
 
-# 5. Crea el directorio /app/scripts donde vivirán nuestros scripts
-
+# 6. Crea el directorio para scripts y cambia permisos
 RUN mkdir -p /app/scripts && chown -R node:node /app
 
-# 6. Copia los nuevos scripts de Python a la imagen
-
+# 7. Copia los scripts
 COPY --chown=node:node zep_utils.py /app/scripts/
 COPY --chown=node:node crear_usuario_zep.py /app/scripts/
 COPY --chown=node:node buscar_contexto.py /app/scripts/
 COPY --chown=node:node grabar_recuerdos.py /app/scripts/
 
-# 7. Vuelve al usuario no privilegiado con el que corre n8n
-
+# 8. Vuelve al usuario no privilegiado
 USER node
