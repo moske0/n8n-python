@@ -1,32 +1,24 @@
 # Empezamos con la imagen oficial de n8n
 FROM docker.n8n.io/n8nio/n8n:latest
 
-# --- TAREAS COMO USUARIO ROOT ---
+# 2. Cambiamos a usuario root para instalar paquetes del sistema
 USER root
 
-# 1. Instalar dependencias del sistema
-RUN apk add --update python3 py3-pip
+# 3. Instala Python 3, pip y las herramientas para crear entornos virtuales
+RUN apk add --no-cache python3 py3-pip python3-venv
 
-# 2. Instalar librerías de Python globalmente
-RUN python3 -m pip install --no-cache-dir --break-system-packages zep-cloud
+# 4. Crea un entorno virtual en /opt/venv e instala zep-cloud dentro
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --no-cache-dir --upgrade pip && \
+    /opt/venv/bin/pip install --no-cache-dir zep-cloud
 
-# 3. Crear un nuevo directorio para nuestros helpers y el fichero __init__.py
-RUN mkdir -p /app/helpers && \
-    touch /app/helpers/__init__.py && \
-    chown -R node:node /app
+# 5. Crea el directorio /app/scripts donde vivirán nuestros scripts
+RUN mkdir -p /app/scripts && chown -R node:node /app
 
-# --- TAREAS COMO USUARIO NODE ---
+# 6. Copia los scripts de Python a la imagen
+COPY --chown=node:node crear_usuario_zep.py /app/scripts/
+COPY --chown=node:node anadir_recuerdo.py /app/scripts/
+COPY --chown=node:node consultar_cerebro.py /app/scripts/
+
+# 7. Vuelve al usuario no privilegiado con el que corre n8n
 USER node
-
-# 4. Instalar herramientas de usuario como pipx
-RUN python3 -m pip install --user --break-system-packages pipx
-
-# 5. Copiar nuestros ficheros de Python al nuevo directorio
-COPY --chown=node:node zep_helpers.py /app/helpers/zep_helpers.py
-COPY --chown=node:node test_import.py /app/helpers/test_import.py
-
-# 6. Añadir el nuevo directorio a la ruta de búsqueda de Python (PYTHONPATH)
-ENV PYTHONPATH="/app/helpers:${PYTHONPATH}"
-
-# 7. Añadir el directorio local de binarios de 'node' AL FINAL del PATH principal
-ENV PATH="$PATH:/home/node/.local/bin"
