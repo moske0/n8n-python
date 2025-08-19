@@ -15,10 +15,11 @@ RUN python3 -m venv /opt/venv && \
 # 5. Crea el directorio /app/scripts donde vivirán nuestros scripts
 RUN mkdir -p /app/scripts && chown -R node:node /app
 
-# 6. Copia los scripts de Python a la imagen
+# 6. Copia los nuevos scripts de Python a la imagen
+COPY --chown=node:node zep_utils.py /app/scripts/
 COPY --chown=node:node crear_usuario_zep.py /app/scripts/
-COPY --chown=node:node anadir_recuerdo.py /app/scripts/
-COPY --chown=node:node consultar_cerebro.py /app/scripts/
+COPY --chown=node:node buscar_contexto.py /app/scripts/
+COPY --chown=node:node grabar_recuerdos.py /app/scripts/
 
 # 7. Vuelve al usuario no privilegiado con el que corre n8n
 USER node
