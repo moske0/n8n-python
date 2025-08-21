@@ -2,7 +2,7 @@
 import os
 import sys
 import json
-from serpapi import GoogleSearch
+import serpapi
 
 def search_youtube(query):
     # Obtener la API key desde las variables de entorno
@@ -16,13 +16,13 @@ def search_youtube(query):
         "engine": "youtube",
         "search_query": query,
         "gl": "es",
-        "hl": "es"
+        "hl": "es",
+        "api_key": api_key
     }
     
     try:
-        # Realizar la búsqueda
-        search = GoogleSearch(params)
-        results = search.get_dict()
+        # Realizar la búsqueda usando la API actual de serpapi
+        results = serpapi.search(params)
         return results
     except Exception as e:
         return {"error": str(e)}
