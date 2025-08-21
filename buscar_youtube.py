@@ -4,7 +4,7 @@ import sys
 import json
 import serpapi
 
-def search_youtube(query):
+def search_youtube(query, num_results=10):
     # Obtener la API key desde las variables de entorno
     api_key = os.environ.get('SERPAPI_API_KEY')
     
@@ -17,6 +17,7 @@ def search_youtube(query):
         "search_query": query,
         "gl": "es",
         "hl": "es",
+        "num": num_results,  # Limitar el número de resultados
         "api_key": api_key
     }
     
@@ -36,5 +37,11 @@ if __name__ == "__main__":
     else:
         query = "Coffee"  # Valor por defecto
     
-    results = search_youtube(query)
+    # Verificar si se proporcionó el número de resultados como argumento
+    if len(sys.argv) > 2:
+        num_results = int(sys.argv[2])
+    else:
+        num_results = 10  # Valor por defecto
+    
+    results = search_youtube(query, num_results)
     print(json.dumps(results, indent=2, ensure_ascii=False))
