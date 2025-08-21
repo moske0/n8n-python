@@ -26,6 +26,7 @@ COPY --chown=node:node grabar_recuerdos.py /app/scripts/
 COPY --chown=node:node buscar_amazon.py /app/scripts/
 COPY --chown=node:node buscar_local.py /app/scripts/
 COPY --chown=node:node buscar_youtube.py /app/scripts/
+COPY --chown=node:node buscar_google.py /app/scripts/
 
 # 8. Vuelve al usuario no privilegiado
 USER node
