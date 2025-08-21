@@ -2,7 +2,7 @@
 import os
 import sys
 import json
-from serpapi import GoogleSearch
+import serpapi
 
 def search_local(query):
     # Obtener la API key desde las variables de entorno
@@ -18,14 +18,15 @@ def search_local(query):
         "q": query,
         "hl": "es",
         "gl": "es",
-        "location": "Sanlucar la Mayor, Andalusia, Spain"
+        "location": "Sanlucar la Mayor, Andalusia, Spain",
+        "api_key": api_key
     }
     
     try:
         # Realizar la búsqueda
-        search = GoogleSearch(params)
-        results = search.get_dict()
-        return results
+        results = serpapi.search(params)
+        # Convertir el objeto SerpResults a un diccionario
+        return dict(results)
     except Exception as e:
         return {"error": str(e)}
 
@@ -35,7 +36,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         query = sys.argv[1]
     else:
-        query = "ayuntamiento"  # Valor por defecto
+        query = "carpintería"  # Valor por defecto
     
     results = search_local(query)
     print(json.dumps(results, indent=2, ensure_ascii=False))
