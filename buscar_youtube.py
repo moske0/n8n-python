@@ -21,9 +21,10 @@ def search_youtube(query):
     }
     
     try:
-        # Realizar la búsqueda usando la API actual de serpapi
+        # Realizar la búsqueda
         results = serpapi.search(params)
-        return results
+        # Convertir el objeto SerpResults a un diccionario
+        return dict(results)
     except Exception as e:
         return {"error": str(e)}
 
